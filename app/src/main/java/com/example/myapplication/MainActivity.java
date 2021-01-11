@@ -22,9 +22,12 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
     //cross=1, circle=0
     int activePlayer=1;
+    boolean somebodyWon=false;
+    int totalMoves=0;
     int winning_positions[][]={{0,1,2},{3,4,5},{6,7,8,},{0,3,6},{1,4,7},{2,5,8},{0,4,8},{2,4,6}};
     int[] slot={2,2,2,2,2,2,2,2,2};
     public void dropIn(View view){
+        ++totalMoves;
         ImageView counter=(ImageView) view;
         int pos=Integer.valueOf(counter.getTag().toString());
         if(slot[pos]==2){
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
                         slot[winningPos[1]]==slot[winningPos[2]] && slot[winningPos[2]]!=2 ){
                     System.out.println(slot[winningPos[0]]);
                     String winner;
+                    somebodyWon=true;
                     if(slot[winningPos[0]]==1){
                         winner="Player 1  (crosses) ";
                     }
@@ -62,11 +66,21 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
+            if(totalMoves==9 && !somebodyWon){
+                TextView tieMessage=(TextView) findViewById(R.id.winnerMessage);
+                tieMessage.setText("It's a tie");
+
+                LinearLayout layout=(LinearLayout)findViewById(R.id.playAgainLayout);
+                layout.setVisibility(View.VISIBLE);
+
+            }
+
 
         }
 
     }
     public void playAgain(View view){   //important to give this argument cuz this function should work only when it gets a view.
+        totalMoves=0;//to make the total no. of moves made as zero
         LinearLayout layout=(LinearLayout)findViewById(R.id.playAgainLayout);
         layout.setVisibility(View.INVISIBLE);
         activePlayer=0;
